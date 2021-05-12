@@ -1,0 +1,206 @@
+<template>
+  <div class="index">
+    <div class="left">
+      <navMenu :isfold="isfold" @getRouterData="routerData" />
+    </div>
+    <div class="right">
+      <div class="header-box">
+        <div class="header-utils">
+          <i class="el-icon-s-unfold" v-if="isfold" @click="changeFold(false)"></i>
+          <i class="el-icon-s-fold" v-else @click="changeFold(true)"></i>
+          <div class="header-utils-r">
+            <div class="level-t">超级管理员</div>
+            <el-dropdown trigger="click"  @command="handleCommand">
+              <span class="el-dropdown-link util">
+                毛超颖j
+                <i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu  slot="dropdown">
+                <el-dropdown-item command="logout">退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <div>
+              <img class="avator" src="../assets/img/avator.jpg" alt />
+            </div>
+          </div>
+        </div>
+        <div class="header-tag" ref='tag_box'>
+          <el-tooltip class="item" effect="dark" :content="tag.name" placement="top"  v-for="(tag,index) in tags"
+              :key="index">
+            <el-tag
+              class="header-tag-item"
+              effect="plain"
+              :closable="index==0?false:true"
+              :type="tag.path == $route.path?'warning':'info'"
+              @click="tagClick(tag.path)"
+              @close="tagClose(index)"
+            >
+              <div class="tag-t" :style="{'width':tagWidth,}">
+                {{tag.name}}
+              </div>
+            </el-tag>
+          </el-tooltip>
+        </div>
+      </div>
+      <div class="con">
+        <div style="min-height:83vh"><router-view /></div>
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+import navMenu from "../components/navMenu";
+export default {
+  name: "App",
+  components: { navMenu },
+  created() {
+    if (localStorage.getItem("router_data")) {
+      this.tags = JSON.parse(localStorage.getItem("router_data"));
+    }
+  },
+  data() {
+    return {
+      isfold: false, //菜单是否折叠
+      tags: [{ name: "数据概览", path: "/home" }], //tag列表
+      tagWidth: 'auto',
+    };
+  },
+  watch:{
+    tags(){
+        if(this.tags.length>10){
+          const tag_box_width = this.$refs.tag_box.clientWidth
+          console.log(tag_box_width);
+
+          this.tagWidth = (tag_box_width/this.tags.length - 50) + 'px'
+        }
+    }
+  },
+  methods: {
+    handleCommand(command){
+      if (command == 'logout') {
+        // this.$http.get('/logout').then(res => {
+        //   if (res.rspCode =='0000') {
+
+        //   }else {
+
+        //   }
+        // })
+        this.$router.push('/login')
+
+      }
+    },
+    changeFold(val) {
+      this.isfold = val;
+    },
+    //存储历史路由
+    routerData(data) {
+      let names = this.tags.map(item => {
+        return item.name;
+      });
+      if (!names.includes(data.name)) {
+        this.tags.push(data);
+
+        localStorage.setItem("router_data", JSON.stringify(this.tags));
+      }
+    },
+    // tag标签点击
+    tagClick(path) {
+      this.$router.push(path);
+    },
+    // tag标签关闭
+    tagClose(index) {
+      let data = JSON.parse(localStorage.getItem("router_data"));
+      data.splice(
+        data.findIndex((item, i) => i === index),
+        1
+      );
+      this.$router.push(data[data.length - 1].path);
+      this.tags = data;
+      localStorage.setItem("router_data", JSON.stringify(data));
+    }
+  }
+};
+</script>
+<style scoped>
+.index {
+  display: flex;
+}
+.left {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.left::-webkit-scrollbar {
+  display: none;
+}
+.right {
+  flex-grow: 1;
+  width: 80%;
+}
+
+.header-utils {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  background: #fff;
+}
+.header-utils-r {
+  display: flex;
+  align-items: center;
+}
+.avator {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  margin-left: 16px;
+}
+.level-t {
+  color: #000;
+  font-size: 12px;
+  margin-right: 16px;
+}
+.util{
+  cursor: pointer;
+}
+.header-tag {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  display: flex;
+}
+.header-tag-item {
+  margin-right: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.tag-t{
+  max-width: 80px;
+  min-width: 20px;
+  height: 16px;
+  line-height: 16px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+.con {
+  width: 100%;
+  background: #fff;
+  height: calc(100vh - 102px);
+  overflow: auto;
+}
+
+.el-icon-s-unfold,
+.el-icon-s-fold {
+  font-size: 22px;
+  color: #909399;
+  cursor: pointer;
+}
+</style>
