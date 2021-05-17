@@ -1,10 +1,10 @@
 <template>
     <div style="margin-left: 20px">
-        <div>
-            <el-row>
-                <el-button icon="el-icon-plus" type="primary" @click="addItem">新增</el-button>
-            </el-row>
-        </div>
+      <div style="position:absolute;right:20px;bottom:20px;">
+
+        <el-button icon="el-icon-plus" type="primary"  @click="addItem" circle></el-button>
+
+      </div>
       <div>
         <el-form ref="form" :model="form" label-width="80px" :inline="true" style="margin-top: 20px;height: 50px">
           <el-form-item label="楼号：" >
@@ -57,6 +57,13 @@
                     </el-switch>
                 </template>
             </el-table-column>
+          <el-table-column
+            label="面积"
+            >
+            <template slot-scope="scope">
+              <span >{{ scope.row.area}}</span>
+            </template>
+          </el-table-column>
             <el-table-column
                     label="描述"
             width="350">
@@ -110,7 +117,7 @@
                 tableData: [], //数据
 
                 //分页数据
-                pageSize: 5,
+                pageSize: 6,
                 currentPage: 1,
                 totalPage: 0,
                 total: 0,

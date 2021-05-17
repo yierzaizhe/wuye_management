@@ -9,18 +9,19 @@
           <i class="el-icon-s-unfold" v-if="isfold" @click="changeFold(false)"></i>
           <i class="el-icon-s-fold" v-else @click="changeFold(true)"></i>
           <div class="header-utils-r">
-            <div class="level-t">超级管理员</div>
+            <!--<div class="level-t">超级管理员</div>-->
             <el-dropdown trigger="click"  @command="handleCommand">
               <span class="el-dropdown-link util">
-                毛超颖j
+                {{userInfo.sub}}
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu  slot="dropdown">
+                <el-dropdown-item command="userCenter">用户信息</el-dropdown-item>
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <div>
-              <img class="avator" src="../assets/img/avator.jpg" alt />
+              <img class="avator" src="../assets/img/user.png" alt />
             </div>
           </div>
         </div>
@@ -52,6 +53,7 @@
 
 <script>
 import navMenu from "../components/navMenu";
+import jwtDecode from 'jwt-decode'
 export default {
   name: "App",
   components: { navMenu },
@@ -65,8 +67,19 @@ export default {
       isfold: false, //菜单是否折叠
       tags: [{ name: "数据概览", path: "/home" }], //tag列表
       tagWidth: 'auto',
+      userInfo: {
+
+      }
     };
   },
+    created() {
+        if (this.$store.state.Authorization == null) {
+            this.userInfo =null
+        } else {
+            this.userInfo = jwtDecode(this.$store.state.Authorization)
+            console.log(this.userInfo)
+        }
+    },
   watch:{
     tags(){
         if(this.tags.length>10){
@@ -79,15 +92,24 @@ export default {
   },
   methods: {
     handleCommand(command){
+        let that = this;
       if (command == 'logout') {
-        // this.$http.get('/logout').then(res => {
-        //   if (res.rspCode =='0000') {
+         this.$http.get('/logout')
+             .catch(function(error) {
+             console.log("服务端错误改为本地强行注销：", error);
+         }).finally(function() {
+             // 本地存储中删除 token
+             window.localStorage.removeItem("Authorization");
+             console.log("服务器 token 和本地 cookie 注销成功");
+             that.$message({
+                 showClose: true,
+                 message: "注销成功！请重新登录",
+                 offset: 66,
+                 type: "success"
+             });
+             that.$router.push("/login");
+         });
 
-        //   }else {
-
-        //   }
-        // })
-        this.$router.push('/login')
 
       }
     },

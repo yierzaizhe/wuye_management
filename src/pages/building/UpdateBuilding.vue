@@ -27,6 +27,9 @@
                 <el-form-item label="名称：" prop="name" required>
                     <el-input v-model="formInfo.name"></el-input>
                 </el-form-item>
+              <el-form-item label="编号：" prop="id" required>
+                <el-input v-model="formInfo.id"></el-input>
+              </el-form-item>
                 <el-form-item label="单元数：" prop="totalUnit" required>
                     <el-input v-model="formInfo.totalUnit"></el-input>
                 </el-form-item>
@@ -67,6 +70,9 @@
                     return {};
                 },
             },
+            requestUrl: {
+                type: String
+            }
         },
         data() {
             return {
@@ -82,7 +88,7 @@
                 that.$refs[formName].validate((valid) => {
                     if (valid) {
                         // 走保存请求
-                        that.$http.post('/building/update',{
+                        that.$http.post(that.requestUrl,{
                             id: params.id,
                             name: params.name,
                             totalUnit: params.totalUnit,

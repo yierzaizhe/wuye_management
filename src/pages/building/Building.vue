@@ -1,9 +1,9 @@
 <template>
     <div style="margin-left: 20px">
-        <div>
-            <el-row>
-                <el-button icon="el-icon-plus" type="primary"  @click="addItem">新增</el-button>
-            </el-row>
+        <div style="position:absolute;right:20px;bottom:20px;">
+
+                <el-button icon="el-icon-plus" type="primary"  @click="addItem" circle></el-button>
+
         </div>
       <div>
         <el-form ref="form" :model="form" label-width="80px" :inline="true" style="margin-top: 20px">
@@ -64,7 +64,7 @@
                     width="180">
                 <template slot-scope="scope">
                     <!--<span style="margin-left: 10px">{{ scope.row.description}}</span>-->
-                    <el-button type="text" @click="dialogVisible = true">点击查看详情</el-button>
+                    <!--<el-button type="text" @click="dialogVisible = true">点击查看详情</el-button>
                     <el-dialog
                             title="提示"
                             :visible.sync="dialogVisible"
@@ -75,7 +75,17 @@
                             <el-button @click="dialogVisible = false">取 消</el-button>
                             <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
                         </span>
-                    </el-dialog>
+                    </el-dialog>-->
+
+                  <el-popover
+                    placement="top-start"
+                    title="详情"
+                    width="200"
+                    trigger="hover"
+                    >
+                    <span style="margin-left: 10px">{{ scope.row.description}}</span>
+                    <el-button slot="reference">查看</el-button>
+                  </el-popover>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -103,7 +113,7 @@
                         ref="updateBuilding"
                         :dialog-title="dialogTitle"
                         :item-info="tableItem"
-
+                        :requestUrl="requestUrl"
                         @closeDialog="closeDialog"></UpdateBuilding>
     </div>
 </template>
@@ -117,6 +127,7 @@
         },
         data() {
             return {
+                requestUrl: '',
                 selectBuildingName: '',
                 dialogVisible: false,
                 tableData: [], //数据
@@ -182,7 +193,7 @@
                         endTime: that.form.endTime,
                         name: that.selectBuildingName
                     }).then( res => {
-                    if(res.errorCode == 200){
+                    if(res.errorCode == '200'){
                         that.tableData = res.data
                         that.totalPage = res.totalPages
                         that.total = res.total
@@ -256,6 +267,7 @@
                 };
                 this.dialogTitle = "添加信息";
                 this.showDialog = true;
+                this.requestUrl = '/building/add';
                 this.$nextTick(() => {
                     this.$refs["updateBuilding"].showDialog = true;
                 });
@@ -264,6 +276,7 @@
                 this.showDialog = true
                 this.tableItem = row;
                 this.dialogTitle = "编辑";
+                this.requestUrl = '/building/update';
                 this.$nextTick(() => {
                     this.$refs["updateBuilding"].showDialog = true;
                 });

@@ -22,11 +22,26 @@ Vue.config.productionTip = false
 import { MessageBox } from 'element-ui' //删除确认
 Vue.prototype.$confirm = MessageBox.confirm
 
+// 引入echarts
+import * as echarts from 'echarts';
+Vue.prototype.$echarts = echarts
+import store from './store'
+
+import moment from 'moment'
+//  全局过滤器 时间戳
+Vue.filter('dateformat', function (dataStr, pattern = 'yyyy-MM-dd HH:mm:ss') {
+  if (dataStr) {
+    return moment(dataStr).format(pattern)
+  } else {
+    return dataStr
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

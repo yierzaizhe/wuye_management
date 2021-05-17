@@ -45,7 +45,15 @@
         data() {
             return {
                 menuIndex: "/home",
+
                 navigationList: [
+                    {
+                        name: "数据概览",
+                        index: "/home",
+                        path: "/home",
+                        icon: "el-icon-menu",
+                        child: []
+                    },
                     {
                         name: "房产信息",
                         icon: "el-icon-menu",
@@ -101,20 +109,57 @@
                                 path: "/parkingLog",
                                 child: []
                             },
+                        ]
+                    },
+                    {
+                        name: "停车收费",
+                        index: "/parkingPay",
+                        path: "/parkingPay",
+                        icon: "el-icon-menu",
+                        child: []
+                    },
+                    {
+                        name: "采购库存",
+                        index: "3",
+                        icon: "el-icon-goods",
+                        child: [
                             {
-                                name: "收费",
-                                index: "/parkingPay",
-                                path: "/parkingPay",
+                                name: "库存",
+                                index: "/stock",
+                                path: "/stock",
+                                icon: "el-icon-menu",
+                                child: []
+                            },
+                            {
+                                name: "采购记录",
+                                index: "/stockLog",
+                                path: "/stockLog",
+                                icon: "el-icon-goods",
                                 child: []
                             },
                         ]
                     },
                     {
-                        name: "采购库存",
-                        index: "/stock",
-                        path: "/stock",
-                        icon: "el-icon-menu",
-                        child: []
+                        name: "员工管理",
+                        index: "4",
+                        icon: "el-icon-s-custom",
+                        child: [
+                            {
+                                name: "新增员工",
+                                index: "/userAdd",
+                                path: "/userAdd",
+                                icon: "el-icon-s-custom",
+                                child: [
+                                ]
+                            }, {
+                                name: "员工管理",
+                                index: "/user",
+                                path: "/user",
+                                icon: "el-icon-s-custom",
+                                child: [
+                                ]
+                            },
+                        ]
                     },
                 ]
             };
@@ -163,4 +208,5 @@
     text-align: center;
     box-sizing: border-box;
   }
+
 </style>

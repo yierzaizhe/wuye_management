@@ -45,10 +45,10 @@
         <div class="login-form-box">
           <el-form :model="loginData">
             <el-form-item>
-              <el-input v-model="loginData.phone" placeholder="用户名"></el-input>
+              <el-input v-model="loginData.username" placeholder="用户名"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="loginData.pwd" type="password" placeholder="密码" @keyup.enter.native="login"></el-input>
+              <el-input v-model="loginData.password" type="password" placeholder="密码" @keyup.enter.native="login"></el-input>
             </el-form-item>
             <el-button type="warning" block class="login-btn" @click="login">登录</el-button>
           </el-form>
@@ -62,35 +62,37 @@ export default {
   data() {
     return {
       loginData: {
-        phone: "admin",
-        pwd: "admin"
+        username: "",
+        password: ""
       }
     };
   },
   methods: {
     login() {
       let that = this
-      if (!this.loginData.phone) {
+      if (!this.loginData.username) {
         this.$message.warning('请输入账号');
-      } else if (!this.loginData.pwd) {
+      } else if (!this.loginData.password) {
         this.$message.warning('请输入密码');
       } else {
+          let postform = {
+              username: this.loginData.username,
+              password: this.loginData.password
+          };
         // 登录
-        //   this.$http.post('/login',{
-        //     password: that.loginData.pwd,
-        //     userName: that.loginData.phone
-        //   }).then(res => {
-        //     if(res.rspCode =='0000') {
-        //       this.$router.push("/home");
-        //     }else {
-        //       this.$message.error(res.rspDesc);
-        //     }
-        //   })
-          if(this.loginData.phone == 'admin' && this.loginData.pwd == 'admin'){
-            this.$router.push("/home");
-          }else{
-            this.$message.error('请求失败，请联系开发人员');
-          }
+           this.$http.loginPost('/login',
+               postform
+           ).then(res => {
+             if(res.errorCode == 200) {
+                 this.$store.commit(
+                     "changeLogin",
+                     JSON.stringify(res.jwtToken)
+                 );
+               this.$router.push("/home");
+             }else {
+               this.$message.error(res.errorMsg);
+             }
+           })
       }
     }
   }
@@ -138,7 +140,7 @@ export default {
 }
 .login-title-l {
   font-size: 18px;
-  font-weight: 400px;
+  /*font-weight: 400px;*/
 }
 .login-form-box {
   padding: 0 20px 20px;

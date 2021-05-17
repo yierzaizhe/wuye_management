@@ -4,11 +4,9 @@
                 v-if="showDialog"
                 :title="dialogTitle"
                 class="dialog-component"
-                :visible="showDialog"
+                :visible.sync="showDialog"
                 width="500px"
                 @close="closeDialog(0)"
-                :destroy-on-close="true"
-                ref="formInfo"
         >
             <el-form
                     ref="formInfo"
@@ -16,28 +14,20 @@
                     class="demo-form-inline"
                     label-width="80px"
             >
-                <el-form-item label="门牌号：" prop="houseCode" required>
-                    <el-input v-model="formInfo.houseCode"></el-input>
+                <el-form-item label="用户名：" prop="account" required >
+                    <el-input v-model="formInfo.account" placeholder="用户名"></el-input>
                 </el-form-item>
-                <el-form-item label="居住类型" prop="kind" required>
-                    <el-switch
-                            v-model="formInfo.kind"
-                            active-color="#ff4949"
-                            inactive-color="#13ce66"
-                            active-text="租用"
-                            inactive-text="购买"
-                            >
-                    </el-switch>
+                <el-form-item label="姓名：" prop="user_name" required>
+                    <el-input v-model="formInfo.user_name"></el-input>
                 </el-form-item>
-
-                <el-form-item label="总费用：" prop="houseFee" required>
-                    <el-input v-model="formInfo.houseFee"></el-input>
-                </el-form-item>
-                <!--<el-form-item label="描述：" prop="kindParam" required>
-                    <el-input v-model="formInfo.kindParam"></el-input>
-                </el-form-item>-->
-              <el-form-item label="类型:" prop="kindParam" required>
-                <el-select v-model="formInfo.kindParam" filterable placeholder="请选择">
+                <!--<el-form-item label="密码：" prop="password" required>
+                    <el-input type="password" v-model="formInfo.password"></el-input>
+                  </el-form-item>-->
+                 <!--<el-form-item label="职位：" prop="role" required>
+                    <el-input v-model="formInfo.role"></el-input>
+                  </el-form-item>-->
+              <el-form-item label="职位:" prop="role_id" >
+                <el-select v-model="formInfo.role_id" filterable placeholder="请选择">
                   <el-option
                     v-for="item in selectKind"
                     :key="item.value"
@@ -46,25 +36,6 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-                <el-form-item label="入住时间" prop="startTime" required>
-                    <el-date-picker
-                            value-format="yyyy-MM-dd hh:mm:ss"
-                            v-model="formInfo.startTime"
-                            type="datetime"
-                            placeholder="选择日期时间"
-                            default-time="12:00:00">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item label="结束时间" prop="endTime" required>
-                    <el-date-picker
-                            value-format="yyyy-MM-dd hh:mm:ss"
-                            v-model="formInfo.endTime"
-                            type="datetime"
-                            placeholder="选择日期时间"
-                            default-time="12:00:00">
-                    </el-date-picker>
-                </el-form-item>
-
                 <el-form-item style="text-align: right;">
                     <el-button type="primary" @click="submitForm('formInfo')"
                     >确定</el-button
@@ -78,12 +49,11 @@
 
 <script>
     export default {
-        name: "UpdateHouseLive",
+        name: "UpdateStock",
         props: {
-
             dialogTitle: {
                 type: String,
-                default: "添加信息",
+                default: "修改员工信息",
             },
             itemInfo: {
                 type: Object,
@@ -100,28 +70,20 @@
         },
         data() {
             return {
+                selectKind: [
+                    /*{
+                        value: '2',
+                        label: '经理'
+                    },{
+                        value: '3',
+                        label: '物业员工'
+                    },{
+                        value: '4',
+                        label: '保安'
+                    }*/
+                ],
                 showDialog: false,
                 formInfo: JSON.parse(JSON.stringify(this.itemInfo)),
-                selectKind: [
-                    {
-                        value: '分期购买',
-                        label: '分期购买'
-                    },{
-                        value: '全款购买',
-                        label: '全款购买'
-                    },{
-                        value: '季度租房',
-                        label: '季度租房'
-                    },
-                    {
-                        value: '年租',
-                        label: '年租'
-                    },
-                    {
-                        value: '月租',
-                        label: '月租'
-                    }
-                ],
             };
         },
         methods: {
@@ -132,16 +94,11 @@
 
                 that.$refs[formName].validate((valid) => {
                     if (valid) {
-
-                        // 走保存请求
                         that.$http.post(that.requestUrl,{
-                            id: params.id,
-                            houseCode: params.houseCode,
-                            kind: params.kind,
-                            houseFee: params.houseFee,
-                            kindParam: params.kindParam,
-                            startTime: params.startTime,
-                            endTime: params.endTime,
+                            id: params.id+"",
+                            account: params.account,
+                            user_name: params.user_name,
+                            role: params.role_id,
                         }).then(res => {
                             if(res.errorCode == '200'){
                                 that.$message({
@@ -178,7 +135,29 @@
                 this.showDialog = false;
                 this.$emit("closeDialog", flag);
             },
+            getRoleList(){
+                this.$http.get('/user/getRole',{
+                }).then(res => {
+                    if (res.errorCode == 200) {
+                        console.log(res)
+                        this.selectKind=res.data
+                    }else{
+                        this.$message.error("res");
+                    }
+                }).catch(err => {
+                    setTimeout(()=>{
+                        this.$message({
+                            message: "操作失败！",
+                            type: "error",
+                        });
+                    },1500)
+                    this.$router.push('*')
+                })
+            }
         },
+        created() {
+            this.getRoleList()
+        }
     }
 </script>
 

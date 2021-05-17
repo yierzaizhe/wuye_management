@@ -1,9 +1,20 @@
 <template>
   <div style="margin-left: 20px">
 
+    <div style="margin-top: 20px">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="车牌号">
+          <el-input v-model="formInline.carCard" placeholder="车牌号"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="addItem">进入</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
     <div>
       <el-form ref="form" :model="form" label-width="80px" :inline="true" style="margin-top: 20px">
-        <el-form-item label="编号：" >
+        <el-form-item label="车牌号：" >
           <el-input v-model="selectCardCode"></el-input>
         </el-form-item>
       </el-form>
@@ -22,12 +33,6 @@
         label="车牌号">
         <template slot-scope="scope">
           <span >{{ scope.row.carCard}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="收费" style="width: 100px;">
-        <template slot-scope="scope">
-          <span >{{ scope.row.pay}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -54,29 +59,11 @@
           <span >{{ (scope.row.startTime)}}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="出场时间"
-      >
-        <template slot-scope="scope">
-          <span>{{ (scope.row.endTime)}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="是否完成">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.finish"
-            active-value="1"
-            inactive-value="0"
-            disabled>
-          </el-switch>
-        </template>
-      </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <!--<el-button
+          <el-button
             size="mini"
-            @click.native.prevent="handleEdit(scope.row)">编辑</el-button>-->
+            @click.native.prevent="toPay(scope.row)">结算</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -98,9 +85,12 @@
 
 <script>
     export default {
-        name: "ParkingLog",
+        name: "ParkingPay",
         data() {
             return {
+                formInline: {
+                    carCard: ''
+                },
                 dialogVisible: false,
                 tableData: [], //数据
 
@@ -113,7 +103,7 @@
                 //表单
                 form: {
                     houseCode: '',
-                    name:'',
+                    name: '',
                     date: '',
                     startTime: '',
                     endTime: ''
@@ -125,10 +115,11 @@
                 dialogTitle: '', //弹窗的title
                 requestUrl: '',
                 tableItem: { //用来更新 新增
-                    id: "",
-                    code: "",
-                    name: "",
-                    createTime: "",
+                    /*id: "",
+                    carCard: "",
+                    pay: "",
+                    endTime: "",
+                    payRemark: ""*/
                 },
             }
         },
@@ -139,27 +130,50 @@
 
         },
         methods: {
+            pay(row,res) {
+                this.$http
+                    .post(
+                        // 也可以设置为自己的主机名加端口号
+                        "/order/alipay?outTradeNo=" +
+                         row.payRemark+
+                        "&subject=" +
+                        row.carCard +
+                        "&totalAmount=" +
+                        res.totalFee +
+                        "&description=" +
+                        res.timeRange
+                    )
+                    .then((resp) => {
+                        console.log(resp)
+                        document.querySelector('body').innerHTML = resp;
+                        const div = document.createElement('div') // 创建div
+                        div.innerHTML = resp // 将返回的form 放入div
+                        document.body.appendChild(div)
+                        document.forms[0].submit()
 
-            handleCurrentChange(page){
+                    });
+            },
+            handleCurrentChange(page) {
                 this.currentPage = page //点击的时候把拿到的页码 赋值给组件
                 this.getList()
             },
             //查找
-            getList(){
+            getList() {
                 let that = this
                 this.$http.post('/parking-log/search',
                     {
-                        currentPage: that.currentPage+"",
-                        pageSize: that.pageSize+"",
+                        currentPage: that.currentPage + "",
+                        pageSize: that.pageSize + "",
                         createTime: that.form.startTime,
                         updateTime: that.form.endTime,
                         carCode: that.selectCardCode,
-                    }).then( res => {
-                    if(res.errorCode == 200){
+                        finish: '0'
+                    }).then(res => {
+                    if (res.errorCode == 200) {
                         that.tableData = res.data
                         that.totalPage = res.totalPages
                         that.total = res.total
-                    }else {
+                    } else {
                         that.$message({
                             showClose: true,
                             message: res.errorMsg,
@@ -167,7 +181,7 @@
                             type: "error"
                         });
                     }
-                }).catch( err => {
+                }).catch(err => {
                     that.$router.push('/dashboard/error')
                     console.log(err)
                     that.$message({
@@ -178,8 +192,8 @@
                     });
                 })
             },
-            async handleDelete(index,row){
-                const confirmResult = await this.$confirm('此操作将永久删除该流水信息, 是否继续?', '提示', {
+            async handleDelete(index, row) {
+                const confirmResult = await this.$confirm('此操作将永久删除该车停车信息, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -190,19 +204,13 @@
                 }
                 // console.log('确认了删除')
                 let that = this
-                this.$http.post('/parking-log/delete',{
+                this.$http.post('/parking-log/delete', {
                     id: row.id,
-                }).then( res => {
-                    if(res.errorCode == 200){
+                }).then(res => {
+                    if (res.errorCode == 200) {
                         that.currentPage = 1
-                        that.$message({
-                            showClose: true,
-                            message: "成功移除信息",
-                            offset: 66,
-                            type: "success"
-                        });
                         that.getList()
-                    }else {
+                    } else {
                         that.$message({
                             showClose: true,
                             message: res.errorMsg,
@@ -210,63 +218,70 @@
                             type: "error"
                         });
                     }
-                }).catch( err => {
+                }).catch(err => {
                     that.$router.push('/dashboard/error')
 
                 })
             },
             // 添加操作
             addItem() {
-                this.tableItem = {
-                    id: "",
-                    code: "",
-                    name: "",
-                    createTime: "",
-                };
-                this.dialogTitle = "添加信息";
-                this.handelType = false;
-                this.showDialog = true;
-                this.requestUrl = '/parking/add';
-                this.$nextTick(() => {
-                    this.$refs["updateParking"].showDialog = true;
-                });
-            },
-            handleEdit(row){
-                this.showDialog = true
-                this.tableItem = row;
-                this.handelType = true;
-                this.dialogTitle = "编辑";
-                this.requestUrl = '/parking/update';
-                this.$nextTick(() => {
-                    this.$refs["updateParking"].showDialog = true;
-                });
-            },
-            // 关闭操作
-            closeDialog(flag) {
-                if (flag) {
-                    // 重新刷新表格内容
-                    this.getList();
+                if (!this.formInline.carCard) {
+                    this.$message.warning('请输入车牌号');
+                }else {
+                    this.$http.post('/parking-log/add', {
+                        carCard: this.formInline.carCard,
+                        finish: '0'
+                    }).then(res => {
+                        if (res.errorCode == 200) {
+                            this.$message.success(this.formInline.carCard+"已经进入！")
+
+                        } else {
+                            this.$message.error(this.formInline.carCard+"停车失败！")
+                        }
+                        this.getList()
+                    }).catch(err => {
+                        this.$message.error("停车失败！")
+                        this.$router.push("/*")
+                    })
                 }
-                this.showDialog = false;
+
             },
+            toPay(row) {
+                this.$http.post('/parking-log/toPay', {
+                    id: row.id,
+                    carCard: row.carCard,
+                    startTime: row.startTime,
+                    havePark: row.havePark,
+                }).then(res => {
+                    if (res.errorCode == 200) {
+                        if (row.havePark == "0"){
+                            this.$message.success(row.carCard+"请通行！！")
+                            this.getList()
+                        }else {
+                            setTimeout(()=>{
+                                this.$message.success(row.carCard+"请缴费！！"+res.data.totalFee+"元！")
+                            },3000)
+
+                            this.pay(row,res.data)
+                        }
+
+                    } else {
+                        this.$message.error(this.formInline.carCard+"结算失败！")
+                    }
+                }).catch(err => {
+                    this.$message.error("结算失败！")
+                    this.$router.push("/*")
+                })
+            },
+
         },
         created() {
             this.getList();
         }
     }
+
 </script>
 
 <style scoped>
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
+
 </style>

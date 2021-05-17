@@ -1,10 +1,10 @@
 <template>
     <div style="margin-left: 20px">
-        <div>
-            <el-row>
-                <el-button icon="el-icon-plus" type="primary" @click="addItem">新增</el-button>
-            </el-row>
-        </div>
+      <div style="position:absolute;right:20px;bottom:20px;">
+
+        <el-button icon="el-icon-plus" type="primary"  @click="addItem" circle></el-button>
+
+      </div>
       <div>
         <el-form ref="form" :model="form" label-width="80px" :inline="true" style="margin-top: 20px">
           <el-form-item label="门牌号：" >

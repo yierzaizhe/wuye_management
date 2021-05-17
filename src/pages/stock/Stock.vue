@@ -7,8 +7,8 @@
     </div>
     <div>
       <el-form ref="form" :model="form" label-width="80px" :inline="true" style="margin-top: 20px">
-        <el-form-item label="编号：" >
-          <el-input v-model="selectParkingCode"></el-input>
+        <el-form-item label="物品：" >
+          <el-input v-model="selectGoods"></el-input>
         </el-form-item>
 
       </el-form>
@@ -24,38 +24,45 @@
         width="50">
       </el-table-column>
       <el-table-column
-        label="车位编码">
+        label="物品名称" width="150">
         <template slot-scope="scope">
-          <span >{{ scope.row.code}}</span>
+          <span >{{ scope.row.goods}}</span>
         </template>
       </el-table-column>
-      <
       <el-table-column
-        label="车位名称">
+        label="描述">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.name}}</span>
+          <span >{{ scope.row.remark}}</span>
         </template>
       </el-table-column>
-
+      <el-table-column
+        label="数量" width="100">
+        <template slot-scope="scope">
+          <span >{{ scope.row.total}}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="创建时间"
       >
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ (scope.row.createTime)}}</span>
+          <span >{{ (scope.row.createTime)}}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="更新时间"
-        >
+      >
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ (scope.row.updateTime)}}</span>
+          <span >{{ (scope.row.updateTime)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" style="width: 200vh">
         <template slot-scope="scope">
           <el-button
             size="mini"
             @click.native.prevent="handleEdit(scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            @click.native.prevent="stockLog(scope.row)">出入库</el-button>
           <el-button
             size="mini"
             type="danger"
@@ -72,29 +79,28 @@
         :total=total>
       </el-pagination>
     </div>
-    <UpdateParking v-if="showDialog"
-                     ref="updateParking"
-                     :dialog-title="dialogTitle"
-                     :item-info="tableItem"
-                     :requestUrl="requestUrl"
-                     @closeDialog="closeDialog"></UpdateParking>
+    <UpdateStock v-if="showDialog"
+                   ref="updateStock"
+                   :dialog-title="dialogTitle"
+                   :item-info="tableItem"
+                   :requestUrl="requestUrl"
+                   @closeDialog="closeDialog"></UpdateStock>
+
   </div>
 </template>
 
 <script>
-    import UpdateParking from "./UpdateParking";
+  import UpdateStock from "./UpdateStock";
+  import UpdateStockLog from "./UpdateStockLog";
     export default {
-        name: "Parking",
+        name: "Stock",
         components: {
-          UpdateParking
+            UpdateStock,
+            UpdateStockLog
         },
         data() {
             return {
-                dialogVisible: false,
                 tableData: [], //数据
-                timeRange: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)], //时间范围
-                input: '',
-                multipleSelection: [], //选择框
 
                 //分页数据
                 pageSize: 6,
@@ -105,27 +111,30 @@
                 //表单
                 form: {
                     houseCode: '',
-                    name:'',
-                    date: '',
+                    goods:'',
                     startTime: '',
                     endTime: ''
                 },
-                selectParkingCode: '',
+                selectGoods: '',
 
                 showDialog: false, //更改组件的显示
+
                 handelType: null,
+
                 dialogTitle: '', //弹窗的title
+
                 requestUrl: '',
                 tableItem: { //用来更新 新增
                     id: "",
-                    code: "",
-                    name: "",
-                    createTime: "",
+                    goods: "",
+                    remark: "",
+                    total: "",
                 },
+
             }
         },
         watch: {
-            selectParkingCode(){
+            selectGoods(){
                 this.getList()
             },
 
@@ -139,13 +148,13 @@
             //查找
             getList(){
                 let that = this
-                this.$http.post('/parking/search',
+                this.$http.post('/stock/search',
                     {
                         currentPage: that.currentPage+"",
                         pageSize: that.pageSize+"",
                         createTime: that.form.startTime,
                         updateTime: that.form.endTime,
-                        code: that.selectParkingCode,
+                        goods: that.selectGoods,
                     }).then( res => {
                     if(res.errorCode == 200){
                         that.tableData = res.data
@@ -180,9 +189,8 @@
                 if (confirmResult !== 'confirm') {
                     return this.$message.info('已取消删除!')
                 }
-                // console.log('确认了删除')
                 let that = this
-                this.$http.post('/parking/delete',{
+                this.$http.post('/stock/delete',{
                     id: row.id,
                 }).then( res => {
                     if(res.errorCode == 200){
@@ -205,16 +213,16 @@
             addItem() {
                 this.tableItem = {
                     id: "",
-                    code: "",
-                    name: "",
-                    createTime: "",
+                    goods: "",
+                    remark: "",
+                    total: "",
                 };
                 this.dialogTitle = "添加信息";
                 this.handelType = false;
                 this.showDialog = true;
-                this.requestUrl = '/parking/add';
+                this.requestUrl = '/stock/add';
                 this.$nextTick(() => {
-                    this.$refs["updateParking"].showDialog = true;
+                    this.$refs["updateStock"].showDialog = true;
                 });
             },
             handleEdit(row){
@@ -222,12 +230,14 @@
                 this.tableItem = row;
                 this.handelType = true;
                 this.dialogTitle = "编辑";
-                this.requestUrl = '/parking/update';
+                this.requestUrl = '/stock/update';
                 this.$nextTick(() => {
-                    this.$refs["updateParking"].showDialog = true;
+                    this.$refs["updateStock"].showDialog = true;
                 });
             },
-            // 关闭操作
+            stockLog(row){
+                this.$router.push({ name:'/updateStock', query: { goods: row.goods ,goodsId: row.id ,total: row.total}})
+            },
             closeDialog(flag) {
                 if (flag) {
                     // 重新刷新表格内容
