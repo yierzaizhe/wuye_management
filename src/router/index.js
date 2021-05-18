@@ -38,6 +38,13 @@ const router = new Router({
             needLogin: true
           },
           component: () => import('../pages/user/User.vue')
+        },{
+          path: "/updatePass",
+          name: '/updatePass',
+          meta: {
+            needLogin: true
+          },
+          component: () => import('../pages/user/UpdatePass.vue')
         },
         {
           path: "/userAdd",

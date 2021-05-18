@@ -36,7 +36,17 @@
           <span style="margin-left: 10px">{{ scope.row.name}}</span>
         </template>
       </el-table-column>
+      <!--<el-table-column
+        label="是否使用"
+        width="100">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.isUse"
 
+            disabled>
+          </el-switch>
+        </template>
+      </el-table-column>-->
       <el-table-column
         label="创建时间"
       >
@@ -51,6 +61,7 @@
           <span style="margin-left: 10px">{{ (scope.row.updateTime)}}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -121,6 +132,7 @@
                     code: "",
                     name: "",
                     createTime: "",
+                    isUse: ""
                 },
             }
         },

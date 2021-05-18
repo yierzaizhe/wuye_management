@@ -80,6 +80,10 @@
                             size="mini"
                             type="danger"
                             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    <el-button
+                     size="mini"
+                      type="success"
+                      @click="handleRuzhu(scope.$index, scope.row)">入住</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -210,6 +214,9 @@
                         type: "error"
                     });
                 })
+            },
+            handleRuzhu(index,row){
+                this.$router.push({ name:'/houseLive', query: { houseCode: row.houseCode}})
             },
             async handleDelete(index,row){
                 const confirmResult = await this.$confirm('此操作将永久删除该房信息, 是否继续?', '提示', {

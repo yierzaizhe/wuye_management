@@ -9,14 +9,13 @@
           <i class="el-icon-s-unfold" v-if="isfold" @click="changeFold(false)"></i>
           <i class="el-icon-s-fold" v-else @click="changeFold(true)"></i>
           <div class="header-utils-r">
-            <!--<div class="level-t">超级管理员</div>-->
             <el-dropdown trigger="click"  @command="handleCommand">
               <span class="el-dropdown-link util">
                 {{userInfo.sub}}
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu  slot="dropdown">
-                <el-dropdown-item command="userCenter">用户信息</el-dropdown-item>
+                <el-dropdown-item command="updatePass">修改密码</el-dropdown-item>
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -77,7 +76,7 @@ export default {
             this.userInfo =null
         } else {
             this.userInfo = jwtDecode(this.$store.state.Authorization)
-            console.log(this.userInfo)
+            /*console.log(this.userInfo)*/
         }
     },
   watch:{
@@ -111,6 +110,8 @@ export default {
          });
 
 
+      }else if(command == 'updatePass'){
+          this.$router.push({ name:'/updatePass', query: { account: this.userInfo.sub}})
       }
     },
     changeFold(val) {

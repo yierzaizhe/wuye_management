@@ -20,7 +20,6 @@
                 <el-form-item label="名称：" prop="name" required>
                     <el-input v-model="formInfo.name"></el-input>
                 </el-form-item>
-
                 <el-form-item label="创建时间" prop="createTime" required>
                     <el-date-picker
                             value-format="yyyy-MM-dd hh:mm:ss"

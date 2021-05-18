@@ -2,7 +2,7 @@
     <div style="margin-left: 20px">
       <div style="position:absolute;right:20px;bottom:20px;">
 
-        <el-button icon="el-icon-plus" type="primary"  @click="addItem" circle></el-button>
+        <el-button icon="el-icon-plus" type="primary"  @click="addItem()" circle></el-button>
 
       </div>
       <div>
@@ -227,6 +227,7 @@
                 let that = this
                 this.$http.post('/house-live/delete',{
                        id: row.id,
+                      houseCode: row.houseCode
                     }).then( res => {
                     if(res.errorCode == 200){
                         that.currentPage = 1
@@ -251,9 +252,9 @@
                 })
             },
             // 添加操作
-            addItem() {
+            addItem(houseCode) {
                 this.tableItem = {
-                    houseCode: "",
+                    houseCode: houseCode,
                     kind: true,
                     houseFee: "",
                     kindParam: "",
@@ -287,6 +288,9 @@
         },
         created() {
             this.getList();
+            if (this.$route.query.houseCode != null || this.$route.query.houseCode != undefined){
+                this.addItem(this.$route.query.houseCode)
+            }
         }
     }
 </script>

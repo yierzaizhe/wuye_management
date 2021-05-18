@@ -2,7 +2,7 @@
     <div style="margin-left: 20px">
       <div style="position:absolute;right:20px;bottom:20px;">
 
-        <el-button icon="el-icon-plus" type="primary"  @click="addItem" circle></el-button>
+        <el-button icon="el-icon-plus" type="primary"  @click="addItem()" circle></el-button>
 
       </div>
       <div>
@@ -279,10 +279,10 @@
                 })
             },
             // 添加操作
-            addItem() {
+            addItem(houseCode) {
                 this.tableItem = {
                     id: "",
-                    houseCode: "",
+                    houseCode: houseCode,
                     name: "",
                     sex: true,
                     idCard: "",
@@ -322,6 +322,9 @@
         },
         created() {
             this.getList();
+            if (this.$route.query.houseCode != null || this.$route.query.houseCode != undefined){
+                this.addItem(this.$route.query.houseCode)
+            }
         }
     }
 </script>

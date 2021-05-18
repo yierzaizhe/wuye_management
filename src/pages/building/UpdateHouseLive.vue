@@ -149,6 +149,7 @@
                                     type: "success",
                                 });
                                 that.closeDialog(1);
+                                that.$router.push({ name:'/owner', query: { houseCode: params.houseCode}})
                             }else {
                                 setTimeout(()=>{
                                     that.$message({
