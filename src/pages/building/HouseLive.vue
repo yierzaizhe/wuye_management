@@ -224,6 +224,7 @@
                     return this.$message.info('已取消删除!')
                 }
                 // console.log('确认了删除')
+
                 let that = this
                 this.$http.post('/house-live/delete',{
                        id: row.id,
