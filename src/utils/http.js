@@ -17,9 +17,15 @@ export default {
    * @returns {Promise<unknown>}
    */
   loginPost(url, params){
+    let headers = localStorage.getItem("Authorization")
+    if(!headers){}
     return new Promise((resolve, reject) => {
       axios.post(url,
-        qs.stringify(params)).then(res => {
+        qs.stringify(params),{
+          headers: {
+            authorization: 'Bearer'+localStorage.getItem("Authorization"),
+          },
+        }).then(res => {
         resolve(res.data)
       }).catch(err => {
         reject(err)
@@ -35,6 +41,10 @@ export default {
         return new Promise((resolve, reject) => {
             axios.get(url, {
                 params: params
+            },{
+              headers: {
+                authorization: 'Bearer'+localStorage.getItem("Authorization"),
+              },
             }).then(res => {
                 resolve(res.data)
             }).catch(err => {
@@ -49,7 +59,11 @@ export default {
      */
     post(url, params) {
         return new Promise((resolve, reject) => {
-            axios.post(url, params)
+            axios.post(url, params,{
+              headers: {
+                authorization: 'Bearer'+localStorage.getItem("Authorization"),
+              },
+            })
                 .then(res => {
                     resolve(res.data)
                 })
@@ -67,7 +81,8 @@ export default {
         return new Promise((resolve, reject) => {
             axios({
                 headers: {
-                    'Content-Type': 'multipart/form-data'// ;boundary=----WebKitFormBoundaryQ6d2Qh69dv9wad2u
+                    'Content-Type': 'multipart/form-data',// ;boundary=----WebKitFormBoundaryQ6d2Qh69dv9wad2u
+                     authorization: localStorage.getItem("Authorization"),
                 },
                 transformRequest: [function (data) { // 在请求之前对data传参进行格式转换
                     const formData = new FormData()

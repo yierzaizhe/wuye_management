@@ -37,13 +37,13 @@ axios.defaults.baseURL = (process.env.NODE_ENV === 'production' ? API_Root : API
 axios.interceptors.request.use(config => {
   // 加载动画
   startLoading();
-//   if(localStorage.eleTokenA){
-//       config.headers.token = localStorage.eleTokenA;
-//   }
-//   if(!localStorage.getItem('power')){
-//     router.push('/login')
-//   }
-//   console.log('请求到');
+   /*if(localStorage.getItem("Authorization")){
+       config.headers.token = localStorage.getItem("Authorization");
+   }
+   if(!localStorage.getItem("Authorization")){
+     router.push('/login')
+   }
+   console.log('请求到');*/
   return config
 }, function (error) {
   Message.error('请求失败')

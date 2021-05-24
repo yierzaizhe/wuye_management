@@ -170,12 +170,12 @@
         methods: {
             changeSwitch(row){
                 let that = this
-                this.$http.post('/user/update',
+                this.$http.post('/user/updateState',
                     {
-                        id:row.id,
+                        id:row.id+"",
                         enabled:row.enabled,
-                        accountNotExpired:row.accountNotExpired,
-                        accountNotLocked:row.accountNotLocked,
+                        accountNotExpired:row.account_not_expired,
+                        accountNotLocked:row.account_not_locked,
                     }).then( res => {
                     if(res.errorCode == 200){
                         that.$message.success("状态修改成功");
