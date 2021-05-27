@@ -235,6 +235,7 @@
                         if (res.errorCode == 200) {
                             this.$message.success(this.formInline.carCard+"已经进入！")
 
+
                         } else {
                             this.$message.error(this.formInline.carCard+"停车失败！")
                         }
