@@ -215,6 +215,7 @@
                         updateTime: that.form.endTime,
                         account: that.selectAccount,
                     }).then( res => {
+                        //console.log(res)
                     if(res.errorCode == 200){
                         that.tableData = res.data
 
@@ -229,8 +230,8 @@
                         });
                     }
                 }).catch( err => {
-                    that.$router.push('/dashboard/error')
-                    console.log(err)
+                    //that.$router.push('/dashboard/error')
+                    //console.log(err)
                     that.$message({
                         showClose: true,
                         message: err.errorMsg,

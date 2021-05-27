@@ -171,6 +171,11 @@ const router = new Router({
       name: '/nulls',
       component: () => import('../pages/nulls.vue')
     },
+    {
+      path: '/noSecurity',
+      name: '/noSecurity',
+      component: () => import('../pages/nulls.vue')
+    },
   ]
 })
 router.beforeEach((to, form, next) => {
@@ -198,5 +203,6 @@ router.beforeEach((to, form, next) => {
 })
 router.afterEach(() => {
   NProgress.done()
+
 })
 export default router

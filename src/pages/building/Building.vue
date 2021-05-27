@@ -1,9 +1,7 @@
 <template>
     <div style="margin-left: 20px">
         <div style="position:absolute;right:20px;bottom:20px;">
-
                 <el-button icon="el-icon-plus" type="primary"  @click="addItem" circle></el-button>
-
         </div>
       <div>
         <el-form ref="form" :model="form" label-width="80px" :inline="true" style="margin-top: 20px">
@@ -52,13 +50,20 @@
                     <span style="margin-left: 10px">{{ scope.row.totalLevel}}</span>
                 </template>
             </el-table-column>
-            <el-table-column
+            <!--<el-table-column
                     label="居住情况"
                     width="180">
                 <template slot-scope="scope">
                     <span style="margin-left: 10px">{{ scope.row.existHouseholds}}/{{ scope.row.totalHouseholds}}</span>
                 </template>
-            </el-table-column>
+            </el-table-column>-->
+          <el-table-column
+            label="总户数"
+            width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.totalHouseholds}}户</span>
+            </template>
+          </el-table-column>
             <el-table-column
                     label="描述"
                     width="180">
@@ -168,7 +173,6 @@
             }
         },
         methods: {
-
             /**焦点失去事件 */
             handleEvent (row) {},
             handleClose(done) {
@@ -243,14 +247,19 @@
                         });
                     }
                 }).catch( err => {
+                    //console.log(err)
+                    /*if(err.errorCode == '2001'){
+                        that.$message({
+                            showClose: true,
+                            message: err.errorMsg,
+                            offset: 66,
+                            type: "error"
+                        });
+                    }else {
+
+                    }*/
                     that.$router.push('/dashboard/error')
-                    /*console.log(err)
-                    that.$message({
-                        showClose: true,
-                        message: err.errorMsg,
-                        offset: 66,
-                        type: "error"
-                    });*/
+
                 })
             },
             // 添加操作

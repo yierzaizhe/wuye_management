@@ -1,5 +1,5 @@
 <template>
-  <div id="login">
+  <div id="login" >
     <!-- color: String类型。默认'#dedede'。粒子颜色。
     particleOpacity: Number类型。默认0.7。粒子透明度。
     particlesNumber: Number类型。默认80。粒子数量。
@@ -15,7 +15,7 @@
     hoverMode: String类型。默认true。可用的hover模式有: "grab", "repulse", "bubble"。
     clickEffect: 布尔类型。默认true。是否有click特效。
     clickMode: String类型。默认true。可用的click模式有: "push", "remove", "repulse", "bubble"。-->
-    <vue-particles
+    <vue-particles style="background: lightslategrey"
       color="#fff"
       :particleOpacity="0.7"
       :particlesNumber="100"

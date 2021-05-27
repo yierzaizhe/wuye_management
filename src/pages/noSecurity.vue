@@ -1,6 +1,6 @@
 <template>
-  <div class="_404">
-    <h2 class="m-0">抱歉，页面未找到，点击跳转至
+  <div class="_403">
+    <h2 class="m-0">抱歉，您无该权限，点击跳转至
       <a href="javascript:;" @click="goHome">首页</a>
     </h2>
     <img src="../assets/img/404.gif" alt="页面未找到">
@@ -8,7 +8,7 @@
 </template>
 <script>
     export default {
-        name: "nulls",
+        name: "noSecurity",
         data() {
             return {
                 countDown: 5

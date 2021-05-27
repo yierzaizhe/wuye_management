@@ -105,12 +105,13 @@
                                 });
                                 that.closeDialog(1);
                             }else {
+                                that.$message({
+                                    message: res.errorMsg+"操作失败！",
+                                    type: "error",
+                                });
                                 setTimeout(()=>{
-                                    that.$message({
-                                        message: res.errorMsg+"操作失败！",
-                                        type: "error",
-                                    });
-                                },3000)
+                                    that.$router.go(0)
+                                },2000)
                                 /*that.$router.push('/dashboard/error')*/
                             }
                         }).catch(err => {

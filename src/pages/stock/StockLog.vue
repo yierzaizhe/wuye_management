@@ -301,13 +301,26 @@
 
             },
             handleEdit(row){
-                this.$http.get('/stock-log/updateStatus/1/'+row.id)
+                /*this.$http.get('/stock-log/updateStatus/1/'+row.id)
                     .then(res => {
                         if (res.errorCode == '200'){
                             this.$message.success("审批完成！！！");
                             this.getList()
                         }else {
                             this.$message.error("审批失败！！！");
+                        }
+                    }).catch(err => {
+                        this.$router.push('*')
+                })*/
+                this.$http.post('/stock-log/updateStatus',{
+                    id: row.id,
+                    status: '1'
+                }).then(res => {
+                        if (res.errorCode == '200'){
+                            this.$message.success("审批完成！！！");
+                            this.getList()
+                        }else {
+                            this.$message.error(res.errorMsg);
                         }
                     }).catch(err => {
                         this.$router.push('*')

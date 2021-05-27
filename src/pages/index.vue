@@ -11,7 +11,7 @@
           <div class="header-utils-r">
             <el-dropdown trigger="click"  @command="handleCommand">
               <span class="el-dropdown-link util">
-                {{userInfo.userName}}
+                {{userInfo.sub}}
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu  slot="dropdown">
@@ -76,9 +76,9 @@ export default {
             this.userInfo =null
         } else {
             let map = jwtDecode(this.$store.state.Authorization)
-            this.userInfo = JSON.parse(map.sub)
-            console.log(JSON.parse(map.sub))
-            /*console.log(this.userInfo)*/
+            /*this.userInfo = JSON.parse(map.sub)*/
+            this.userInfo = map
+
         }
     },
   watch:{

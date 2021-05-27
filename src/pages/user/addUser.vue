@@ -77,7 +77,7 @@
                             this.$message.success("账号申请成功，请告知员工");
                             this.$router.push('/user')
                         }else{
-                            this.$message.error("res");
+                            this.$message.error(res.errorMsg);
                         }
                     }).catch(err => {
                         setTimeout(()=>{

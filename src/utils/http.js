@@ -8,6 +8,7 @@
  */
 import axios from 'axios'
 import qs from "qs";
+import he from "element-ui/src/locale/lang/he";
 axios.defaults.baseURL = 'http://127.0.0.1:8088/wuye';
 export default {
   /**
@@ -18,19 +19,36 @@ export default {
    */
   loginPost(url, params){
     let headers = localStorage.getItem("Authorization")
-    if(!headers){}
-    return new Promise((resolve, reject) => {
-      axios.post(url,
-        qs.stringify(params),{
-          headers: {
-            authorization: 'Bearer'+localStorage.getItem("Authorization"),
-          },
-        }).then(res => {
-        resolve(res.data)
-      }).catch(err => {
-        reject(err)
+    console.log(headers)
+    let auth =""
+    if(headers != null || headers != undefined){
+
+      console.log("已登陆过")
+      auth = 'Bearer'+headers
+      return new Promise((resolve, reject) => {
+        axios.post(url,
+          qs.stringify(params),{
+            headers: {
+              authorization: auth,
+            },
+          }).then(res => {
+          resolve(res.data)
+        }).catch(err => {
+          reject(err)
+        })
       })
-    })
+    }else{
+      console.log("未登陆过")
+      return new Promise((resolve, reject) => {
+        axios.post(url,
+          qs.stringify(params)).then(res => {
+          resolve(res.data)
+        }).catch(err => {
+          reject(err)
+        })
+      })
+    }
+
   },
     /**
      * get方法，对应get请求
@@ -41,10 +59,6 @@ export default {
         return new Promise((resolve, reject) => {
             axios.get(url, {
                 params: params
-            },{
-              headers: {
-                authorization: 'Bearer'+localStorage.getItem("Authorization"),
-              },
             }).then(res => {
                 resolve(res.data)
             }).catch(err => {
@@ -97,6 +111,9 @@ export default {
             }).then(res => {
                 resolve(res.data)
             }).catch(err => {
+              if(err.errorCode == '2001'){
+                this.$router.push("No")
+              }
                 reject(err)
             })
         })

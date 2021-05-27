@@ -149,14 +149,24 @@
                                     type: "success",
                                 });
                                 that.closeDialog(1);
-                                that.$router.push({ name:'/owner', query: { houseCode: params.houseCode}})
+                                if(that.requestUrl == '/house-live/add'){
+                                    that.$router.push({ name:'/owner', query: { houseCode: params.houseCode}})
+                                }
+
                             }else {
+                                that.$message({
+                                    message: res.errorMsg+"操作失败！",
+                                    type: "error",
+                                });
                                 setTimeout(()=>{
+                                    that.$router.go(0)
+                                },2000)
+                                /* setTimeout(()=>{
                                     that.$message({
                                         message: res.errorMsg+"操作失败！",
                                         type: "error",
                                     });
-                                },3000)
+                                },3000)*/
                                 /*that.$router.push('/dashboard/error')*/
                             }
                         }).catch(err => {
