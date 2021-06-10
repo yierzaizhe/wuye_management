@@ -15,7 +15,7 @@
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu  slot="dropdown">
-                <el-dropdown-item command="updatePass">修改密码</el-dropdown-item>
+                <el-dropdown-item command="updatePass">修改信息</el-dropdown-item>
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>

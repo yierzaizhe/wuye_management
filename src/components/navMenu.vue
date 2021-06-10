@@ -51,7 +51,7 @@
                         name: "数据概览",
                         index: "/home",
                         path: "/home",
-                        icon: "el-icon-menu",
+                        icon: "el-icon-s-data",
                         child: []
                     },
                     {
@@ -83,7 +83,7 @@
                         name: "客户信息",
                         index: "/owner",
                         path: "/owner",
-                        icon: "el-icon-menu",
+                        icon: "el-icon-s-custom",
                         child: []
                     },
                     {
@@ -115,7 +115,7 @@
                         name: "停车收费",
                         index: "/parkingPay",
                         path: "/parkingPay",
-                        icon: "el-icon-menu",
+                        icon: "el-icon-truck",
                         child: []
                     },
                     {

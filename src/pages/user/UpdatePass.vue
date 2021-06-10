@@ -1,16 +1,17 @@
 <template>
   <div style="margin: 40px;width: 500px;text-align: center">
-    <el-form ref="form" :model="form" label-width="100px">
+    <el-form ref="form" :model="form" label-width="100px"
+             :rules="rules">
       <el-form-item label="用户名">
         <el-input v-model="form.account" ></el-input>
       </el-form-item>
       <el-form-item label="旧密码">
         <el-input v-model="form.oldPassword" type="password"></el-input>
       </el-form-item>
-      <el-form-item label="新密码">
+      <el-form-item label="新密码" prop="newPassword">
         <el-input v-model="form.newPassword" type="password"></el-input>
       </el-form-item>
-      <el-form-item label="确认新密码">
+      <el-form-item label="确认新密码" prop="newPassword">
         <el-input v-model="form.confirmPassword" type="password"></el-input>
       </el-form-item>
       <el-form-item>
@@ -32,6 +33,21 @@
                     newPassword: '',
                     confirmPassword: '',
                     account: '',
+                },
+                rules:{
+                    newPassword: [
+                        {
+                            required:true,
+                            message:'密码至少包含 数字和英文，长度6-20',
+                            trigger:'change'
+                        },
+                        {
+                            pattern:/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
+                            message:'密码至少包含 数字和英文，长度6-20',
+                            trigger:'blur'
+                        }
+                    ]
+
                 },
 
             }

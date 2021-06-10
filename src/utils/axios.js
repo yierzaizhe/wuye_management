@@ -23,7 +23,7 @@ const endLoading = () => {
   loading.close()
 }
 
-let API_Root = ''
+/*let API_Root = ''
 if(window.location.href.includes('ymd.romacredit.com')){
   API_Root = 'http://ymd.romacredit.com:8765/emdManager/'
 }else{
@@ -31,7 +31,7 @@ if(window.location.href.includes('ymd.romacredit.com')){
 }
 const API_Root_DEV = 'http://ymdsit.romacredit.com:8765/emdManager/'
 
-axios.defaults.baseURL = (process.env.NODE_ENV === 'production' ? API_Root : API_Root_DEV)
+axios.defaults.baseURL = (process.env.NODE_ENV === 'production' ? API_Root : API_Root_DEV)*/
 
 // 添加请求拦截器
 axios.interceptors.request.use(config => {

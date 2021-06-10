@@ -13,6 +13,7 @@
                     :model="formInfo"
                     class="demo-form-inline"
                     label-width="80px"
+                    :rules="rules"
             >
                 <el-form-item label="门牌号：" prop="houseCode" required >
                     <el-input v-model="formInfo.houseCode" placeholder="楼栋/单元/层户，例01010101"></el-input>
@@ -109,6 +110,32 @@
             return {
                 showDialog: false,
                 formInfo: JSON.parse(JSON.stringify(this.itemInfo)),
+                rules:{
+                    telephone: [
+                        {
+                            required:true,
+                            message:'请输入正确的11位固定或手机号码',
+                            trigger:'change'
+                        },
+                        {
+                            pattern:/^((0\d{2,3}-\d{7,8})|(1[35784]\d{9}))$/,
+                            message:'请输入合法手机号/电话号',
+                            trigger:'blur'
+                        }
+                    ]
+                    ,idCard: [
+                        {
+                            required:true,
+                            message:'请输入正确的身份证号码',
+                            trigger:'change'
+                        },
+                        {
+                            pattern:/^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+                            message:'请输入正确的身份证号码',
+                            trigger:'blur'
+                        }
+                    ]
+                },
             };
         },
         methods: {

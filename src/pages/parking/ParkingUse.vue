@@ -237,7 +237,7 @@
                 })
             },
             async handleDelete(index,row){
-                const confirmResult = await this.$confirm('此操作将永久删除该楼信息, 是否继续?', '提示', {
+                const confirmResult = await this.$confirm('此操作将永久删除该车位使用信息, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -248,7 +248,7 @@
                 }
                 // console.log('确认了删除')
                 let that = this
-                this.$http.post('/parking/delete',{
+                this.$http.post('/parking-use/delete',{
                     id: row.id,
                 }).then( res => {
                     if(res.errorCode == 200){
