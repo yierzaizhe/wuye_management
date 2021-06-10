@@ -20,6 +20,7 @@
               </el-dropdown-menu>
             </el-dropdown>
             <div>
+
               <img class="avator" src="../assets/img/user.png" alt />
             </div>
           </div>
